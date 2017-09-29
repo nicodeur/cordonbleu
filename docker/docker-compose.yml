@@ -1,0 +1,21 @@
+version: '2'
+services:
+  cordonbleu-mysql:
+    image: mongo
+    expose:
+      - "27017"
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./localdata/mongo-db/config/:/data/configdb
+  cordonbleu-app:
+    image: nicodeur/cordonbleu    
+    ports:
+      - "11545:8080"
+    volumes:
+      #- ./logs:logs TODO
+      - ./conf/:logs TODO
+    depends_on:
+      - cordonbleu-mysql
+    links:
+      - cordonbleu-mysql
