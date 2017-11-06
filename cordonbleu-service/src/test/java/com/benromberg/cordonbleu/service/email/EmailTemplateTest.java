@@ -18,9 +18,10 @@ public class EmailTemplateTest {
                 return super.getPlainBodyTemplate().add("value", SEPARATOR_BETWEEN_HEADER_AND_FOOTER);
             }
         };
-        String CRLF = System.getProperty("line.separator"); // \n doesn't work on windows, so find the good CRLF for platform
-        assertThat(template.getPlainBody()).contains(CRLF + CRLF + SEPARATOR_BETWEEN_HEADER_AND_FOOTER + CRLF + CRLF);
-        assertThat(template.getPlainBody()).doesNotContain(CRLF + CRLF + CRLF);
+
+        String CRLF = System.getProperty("line.separator");
+        assertThat(template.getPlainBody()).contains(CRLF+CRLF + SEPARATOR_BETWEEN_HEADER_AND_FOOTER + CRLF+CRLF);
+        assertThat(template.getPlainBody()).doesNotContain(CRLF+CRLF+CRLF);
     }
 
     @Test
