@@ -11,6 +11,7 @@ import static java.util.stream.Collectors.toList;
 import static org.mongojack.Aggregation.Expression.path;
 import com.benromberg.cordonbleu.util.CollectionUtil;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -169,7 +170,15 @@ public class CommitDao extends MongoDao<CommitId, Commit> {
                                 object("$nin", convertToDbObject(existingRepositories)))));
         remove(DBQuery.size(REPOSITORIES_PROPERTY, 0));
     }
+    
 
+    public List<Commit> findByTeam(Team team, LocalDateTime beginDate, LocalDateTime endDate) {    		
+		return find(DBQuery.and(
+				DBQuery.is(ID_PROPERTY + "." + CommitId.TEAM_PROPERTY, team),
+				DBQuery.greaterThan(Commit.CREATED_PROPERTY, beginDate),
+				DBQuery.lessThan(Commit.CREATED_PROPERTY, endDate))).toArray();
+    }
+    
     public List<Commit> findNotifications(User user, int limit) {
         List<String> userEmails = collectUniqueUserEmails(asList(user));
         Query withinTeamsOfUser = DBQuery.in(ID_PROPERTY + "." + CommitId.TEAM_PROPERTY,

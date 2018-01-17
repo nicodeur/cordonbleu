@@ -1,12 +1,16 @@
 package com.benromberg.cordonbleu.service.commit;
 
 import static java.util.stream.Collectors.toList;
+
+import java.time.LocalDateTime;
+
 import com.benromberg.cordonbleu.data.dao.CommitDao;
 import com.benromberg.cordonbleu.data.dao.TeamDao;
 import com.benromberg.cordonbleu.data.model.Comment;
 import com.benromberg.cordonbleu.data.model.Commit;
 import com.benromberg.cordonbleu.data.model.CommitApproval;
 import com.benromberg.cordonbleu.data.model.CommitId;
+import com.benromberg.cordonbleu.data.model.Team;
 import com.benromberg.cordonbleu.data.model.User;
 import com.benromberg.cordonbleu.util.ClockService;
 
@@ -50,6 +54,10 @@ public class CommitService {
 
     private Optional<Commit> updateApproval(CommitId commitId, Optional<CommitApproval> approval) {
         return commitDao.updateApproval(commitId, approval);
+    }
+    
+    public List<Commit> findByTeam(Team team, LocalDateTime beginDate, LocalDateTime endDate) {
+    	return commitDao.findByTeam(team, beginDate, endDate);
     }
 
     public CommitNotifications findNotifications(User user, int limit) {

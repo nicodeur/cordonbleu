@@ -36,6 +36,10 @@ public class TeamService {
     public Optional<Team> findPublicTeamByName(String name) {
         return dao.findByName(name).filter(team -> !team.isPrivate());
     }
+    
+    public Optional<Team> findTeamByName(String name) {
+        return dao.findByName(name);
+    }
 
     public Optional<Team> findById(String teamId) {
         return dao.findById(teamId);

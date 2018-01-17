@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.benromberg.cordonbleu</groupId>
         <artifactId>cordonbleu-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
         <relativePath>../cordonbleu-parent/pom.xml</relativePath>
     </parent>
     <artifactId>cordonbleu-main</artifactId>

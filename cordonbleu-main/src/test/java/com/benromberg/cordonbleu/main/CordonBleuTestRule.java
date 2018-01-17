@@ -83,6 +83,11 @@ public class CordonBleuTestRule implements TestRule, CommitFixture, CommentFixtu
         beforeEachCallbacks.add(() -> getInstance(TeamDao.class).insert(TEAM));
         return this;
     }
+    
+    public CordonBleuTestRule withActivity() {
+        beforeEachCallbacks.add(() -> getInstance(TeamDao.class).insert(TEAM));
+        return this;
+    }
 
     public CordonBleuTestRule withRepository() {
         withTeam();

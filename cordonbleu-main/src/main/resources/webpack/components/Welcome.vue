@@ -26,7 +26,8 @@ module.exports = {
     }
   },
   ready: function() {
-    this.ajaxGet('/team/public', null, data => this.publicTeams = data)
+    this.ajaxGet('/team/public', null, data => this.publicTeams = data);
+    this.ajaxGet('/activity/public', null, data => this.publicTeams = data)
   }
 }
 </script>
