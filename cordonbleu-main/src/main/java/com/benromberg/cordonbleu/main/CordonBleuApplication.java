@@ -8,7 +8,11 @@ import io.dropwizard.lifecycle.ExecutorServiceManager;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.time.Duration;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -36,9 +40,12 @@ public class CordonBleuApplication extends Application<CordonBleuConfiguration> 
     private Injector injector;
     private ScheduledExecutorService scheduledExecutorService;
     private final Module module;
+    private static int UpdateCodeRepositoryTaskTime = 1;
+    private static int SendEmailTaskTime = 1;
+    
 
     public static void main(String[] args) throws Exception {
-        new CordonBleuApplication(new GuiceModule()).run(args);
+    	 new CordonBleuApplication(new GuiceModule()).run(args);
     }
 
     public CordonBleuApplication(Module module) {
@@ -76,6 +83,15 @@ public class CordonBleuApplication extends Application<CordonBleuConfiguration> 
         environment.lifecycle().manage(createExecutorServiceManager());
         scheduledExecutorService = environment.lifecycle().scheduledExecutorService(SCHEDULED_EXECUTER_SERVICE_NAME)
                 .build();
+
+        try(InputStream resourceStream = new FileInputStream("./config.properties")) {
+        	Properties props = new Properties();
+            props.load(resourceStream);
+            UpdateCodeRepositoryTaskTime = Integer.valueOf(props.getProperty("UpdateCodeRepositoryTaskTime"));
+    		SendEmailTaskTime = Integer.valueOf(props.getProperty("SendEmailTaskTime"));
+        } catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace();
+        }
         scheduleTasks();
     }
 
@@ -86,8 +102,8 @@ public class CordonBleuApplication extends Application<CordonBleuConfiguration> 
 
     protected void scheduleTasks() {
         scheduleOnceAtStartup(WarmupSyntaxHighlighterTask.class);
-        scheduleAtFixedRate(UpdateCodeRepositoryTask.class, Duration.ofMinutes(1));
-        scheduleAtFixedRate(SendEmailTask.class, Duration.ofMinutes(1));
+        scheduleAtFixedRate(UpdateCodeRepositoryTask.class, Duration.ofMinutes(UpdateCodeRepositoryTaskTime));
+        scheduleAtFixedRate(SendEmailTask.class, Duration.ofMinutes(SendEmailTaskTime));
     }
 
     private void scheduleAtFixedRate(Class<? extends Runnable> taskClass, Duration rate) {

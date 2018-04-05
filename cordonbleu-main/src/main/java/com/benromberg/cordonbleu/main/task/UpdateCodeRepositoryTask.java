@@ -29,13 +29,18 @@ public class UpdateCodeRepositoryTask extends AbstractTask {
 
     @Override
     public void runTask() {
-        List<Commit> commitsToHighlight = new ArrayList<>();
-        service.updateRepositories(commit -> {
-            if (Duration.between(commit.getCreated(), ClockService.now()).toDays() <= COMMIT_AGE_TO_HIGHLIGHT_IN_DAYS) {
-                commitsToHighlight.add(commit);
-            }
-        });
-        highlightCommits(commitsToHighlight);
+		try {
+			List<Commit> commitsToHighlight = new ArrayList<>();
+			service.updateRepositories(commit -> {
+				if (Duration.between(commit.getCreated(), ClockService.now()).toDays() <= COMMIT_AGE_TO_HIGHLIGHT_IN_DAYS) {
+					commitsToHighlight.add(commit);
+				}
+			});
+			highlightCommits(commitsToHighlight);
+
+		} catch (Exception e) {
+			LOGGER.error("Exception in task UpdateCodeRepositoryTask", e);
+		}
     }
 
     private void highlightCommits(List<Commit> commitsToHighlight) {
